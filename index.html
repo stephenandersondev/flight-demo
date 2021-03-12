@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- jQuery -->
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <!-- Flight release -->
+    <script src="http://flightjs.github.io/release/latest/flight.min.js"></script>
+    <title>Flight Demo App</title>
+    <style>
+        .container {
+            display: flex;
+            justify-content: center;
+            margin: 5px;
+        }
+
+        #count {
+            font-size: x-large;
+            font-weight: bold;
+        }
+    </style>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+
+            var Count = flight.component(count)
+
+            function count() {
+                this.attributes ({
+                    incrementSelector: '#increment',
+                    decrementSelector: '#decrement',
+                    resetSelector: '#reset',
+                    countSelector: '#count',
+                    count: 0
+                })
+
+                this.increment = function() {
+                    console.log('increment')
+                    this.attr.count++
+                    console.log(this.attr.count)
+                    this.attr.countSelector.innerText = this.attr.count
+                }
+
+                this.decrement = function() {
+                    console.log('decrement')
+                    if(this.attr.count > 0) this.attr.count--
+                    console.log(this.attr.count)
+                }
+
+                this.reset = function() {
+                    console.log('reset')
+                    this.attr.count = 0
+                    console.log(this.attr.count)
+                }
+
+                this.setCount = function(e) {
+                    this.attr.count = e.target.value
+                }
+
+                this.after('initialize', function() {
+                    this.on('click', {
+                        incrementSelector: this.increment,
+                        decrementSelector: this.decrement,
+                        resetSelector: this.reset
+                    })
+                    this.on('input', {
+                        countSelector: this.setCount
+                    })
+                })
+            }
+
+            Count.attachTo('body')
+
+            })
+    </script>
+</head>
+<body>
+    <div class="container">
+        <span id="count">0</span>
+    </div>
+    <div class="container">
+        <button id="decrement">Decrement</button>
+        <input type="number" id="input" placeholder="Initial count"/>
+        <button id="increment">Increment</button>
+    </div>
+    <div class="container">
+        <button id="reset">Reset</button>
+    </div>
+</body>
+</html>
