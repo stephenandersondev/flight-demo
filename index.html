@@ -44,23 +44,27 @@
 
                     this.increment = function() {
                         this.count++
-                        $('#count').html(this.count)
+                        this.trigger('update-count')
                     }
 
                     this.decrement = function() {
                         if(this.count > 0) this.count--
-                        $('#count').html(this.count)
+                        this.trigger('update-count')
                     }
 
                     this.reset = function() {
                         this.count = 0
-                        $('#count').html(this.count)
+                        this.trigger('update-count')
                     }
 
                     this.setCount = function(e) {
                         this.count = e.target.value
-                        $('#count').html(this.count)
+                        this.trigger('update-count')
                         $('#input').val("")
+                    }
+
+                    this.updateCount = function() {
+                        $('#count').html(this.count)
                     }
 
                     this.after('initialize', function() {
@@ -72,13 +76,14 @@
                         this.on('#input', 'blur', {
                             inputSelector: this.setCount
                         })
+                        this.on('update-count', this.updateCount)
                     })
                 }
 
                 flight.component(count).attachTo('body')
 
             } else {
-                
+
                  //version #2- uses multiple components
                  function count() {
                     this.attributes ({
@@ -93,12 +98,12 @@
 
                     this.increment = function() {
                         this.count++
-                        $('#count').html(this.count)
+                        this.trigger('update-count')
                     }
 
                     this.decrement = function() {
                         if(this.count > 0) this.count--
-                        $('#count').html(this.count)
+                        // $('#count').html(this.count)
                     }
 
                     this.reset = function() {
@@ -112,6 +117,10 @@
                         $('#input').val("")
                     }
 
+                    this.updateCount = function() {
+                        $('#count').html(this.count)
+                    }
+
                     this.after('initialize', function() {
                         this.on('click', {
                             incrementSelector: this.increment,
@@ -121,6 +130,7 @@
                         this.on('#input', 'blur', {
                             inputSelector: this.setCount
                         })
+                        this.on('update-count', this.updateCount)
                     })
                 }
 
