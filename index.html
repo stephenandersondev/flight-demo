@@ -31,31 +31,32 @@
                     incrementSelector: '#increment',
                     decrementSelector: '#decrement',
                     resetSelector: '#reset',
-                    countSelector: '#count',
-                    count: 0
+                    inputSelector: '#input',
+                    countSelector: '#count'
                 })
 
+                this.count = 0
+
                 this.increment = function() {
-                    console.log('increment')
-                    this.attr.count++
-                    console.log(this.attr.count)
-                    this.attr.countSelector.innerText = this.attr.count
+                    this.count++
+                    $('#count').html(this.count)
                 }
 
                 this.decrement = function() {
-                    console.log('decrement')
-                    if(this.attr.count > 0) this.attr.count--
-                    console.log(this.attr.count)
+                    if(this.count > 0) this.count--
+                    $('#count').html(this.count)
                 }
 
                 this.reset = function() {
-                    console.log('reset')
-                    this.attr.count = 0
-                    console.log(this.attr.count)
+                    this.count = 0
+                    $('#count').html(this.count)
                 }
 
                 this.setCount = function(e) {
-                    this.attr.count = e.target.value
+                    this.count = e.target.value
+                    console.log(this.count)
+                    $('#count').html(this.count)
+                    $('#input').val("")
                 }
 
                 this.after('initialize', function() {
@@ -65,7 +66,7 @@
                         resetSelector: this.reset
                     })
                     this.on('input', {
-                        countSelector: this.setCount
+                        inputSelector: this.setCount
                     })
                 })
             }
