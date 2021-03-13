@@ -22,57 +22,112 @@
         }
     </style>
     <script>
+       
         document.addEventListener("DOMContentLoaded", () => {
 
-            var Count = flight.component(count)
+            //use to swap between versions of code
+            const version = 1
 
-            function count() {
-                this.attributes ({
-                    incrementSelector: '#increment',
-                    decrementSelector: '#decrement',
-                    resetSelector: '#reset',
-                    inputSelector: '#input',
-                    countSelector: '#count'
-                })
+            if(version === 1) {
 
-                this.count = 0
+                //version #1- just uses one component
+                function count() {
+                    this.attributes ({
+                        incrementSelector: '#increment',
+                        decrementSelector: '#decrement',
+                        resetSelector: '#reset',
+                        inputSelector: '#input',
+                        countSelector: '#count'
+                    })
 
-                this.increment = function() {
-                    this.count++
-                    $('#count').html(this.count)
-                }
-
-                this.decrement = function() {
-                    if(this.count > 0) this.count--
-                    $('#count').html(this.count)
-                }
-
-                this.reset = function() {
                     this.count = 0
-                    $('#count').html(this.count)
+
+                    this.increment = function() {
+                        this.count++
+                        $('#count').html(this.count)
+                    }
+
+                    this.decrement = function() {
+                        if(this.count > 0) this.count--
+                        $('#count').html(this.count)
+                    }
+
+                    this.reset = function() {
+                        this.count = 0
+                        $('#count').html(this.count)
+                    }
+
+                    this.setCount = function(e) {
+                        this.count = e.target.value
+                        $('#count').html(this.count)
+                        $('#input').val("")
+                    }
+
+                    this.after('initialize', function() {
+                        this.on('click', {
+                            incrementSelector: this.increment,
+                            decrementSelector: this.decrement,
+                            resetSelector: this.reset
+                        })
+                        this.on('#input', 'blur', {
+                            inputSelector: this.setCount
+                        })
+                    })
                 }
 
-                this.setCount = function(e) {
-                    this.count = e.target.value
-                    $('#count').html(this.count)
-                    $('#input').val("")
+                flight.component(count).attachTo('body')
+
+            } else {
+                
+                 //version #2- uses multiple components
+                 function count() {
+                    this.attributes ({
+                        incrementSelector: '#increment',
+                        decrementSelector: '#decrement',
+                        resetSelector: '#reset',
+                        inputSelector: '#input',
+                        countSelector: '#count'
+                    })
+
+                    this.count = 0
+
+                    this.increment = function() {
+                        this.count++
+                        $('#count').html(this.count)
+                    }
+
+                    this.decrement = function() {
+                        if(this.count > 0) this.count--
+                        $('#count').html(this.count)
+                    }
+
+                    this.reset = function() {
+                        this.count = 0
+                        $('#count').html(this.count)
+                    }
+
+                    this.setCount = function(e) {
+                        this.count = e.target.value
+                        $('#count').html(this.count)
+                        $('#input').val("")
+                    }
+
+                    this.after('initialize', function() {
+                        this.on('click', {
+                            incrementSelector: this.increment,
+                            decrementSelector: this.decrement,
+                            resetSelector: this.reset
+                        })
+                        this.on('#input', 'blur', {
+                            inputSelector: this.setCount
+                        })
+                    })
                 }
 
-                this.after('initialize', function() {
-                    this.on('click', {
-                        incrementSelector: this.increment,
-                        decrementSelector: this.decrement,
-                        resetSelector: this.reset
-                    })
-                    this.on('input', {
-                        inputSelector: this.setCount
-                    })
-                })
+                flight.component(count).attachTo('body')
             }
 
-            Count.attachTo('body')
-
-            })
+        })
     </script>
 </head>
 <body>
