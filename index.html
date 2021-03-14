@@ -44,22 +44,22 @@
 
                     this.increment = function() {
                         this.count++
-                        this.trigger('update-count')
+                        this.updateCount()
                     }
 
                     this.decrement = function() {
                         if(this.count > 0) this.count--
-                        this.trigger('update-count')
+                        this.updateCount()
                     }
 
                     this.reset = function() {
                         this.count = 0
-                        this.trigger('update-count')
+                        this.updateCount()
                     }
 
-                    this.setCount = function(e) {
+                    this.input = function(e) {
                         this.count = e.target.value
-                        this.trigger('update-count')
+                        this.updateCount()
                         $('#input').val("")
                     }
 
@@ -74,9 +74,8 @@
                             resetSelector: this.reset
                         })
                         this.on('#input', 'blur', {
-                            inputSelector: this.setCount
+                            inputSelector: this.input
                         })
-                        this.on('update-count', this.updateCount)
                     })
                 }
 
@@ -86,55 +85,104 @@
 
                  //version #2- uses multiple components
                  function count() {
-                    this.attributes ({
-                        incrementSelector: '#increment',
-                        decrementSelector: '#decrement',
-                        resetSelector: '#reset',
-                        inputSelector: '#input',
-                        countSelector: '#count'
-                    })
 
                     this.count = 0
 
                     this.increment = function() {
                         this.count++
-                        this.trigger('update-count')
+                        this.updateCount()
                     }
 
                     this.decrement = function() {
                         if(this.count > 0) this.count--
-                        // $('#count').html(this.count)
+                        this.updateCount()
                     }
 
                     this.reset = function() {
                         this.count = 0
-                        $('#count').html(this.count)
+                        this.updateCount()
                     }
 
-                    this.setCount = function(e) {
-                        this.count = e.target.value
-                        $('#count').html(this.count)
-                        $('#input').val("")
+                    this.input = function(e, data) {
+                        this.count = data.initialCount
+                        this.updateCount()
                     }
 
                     this.updateCount = function() {
-                        $('#count').html(this.count)
+                        this.$node.html(this.count)
                     }
 
+
+
                     this.after('initialize', function() {
-                        this.on('click', {
-                            incrementSelector: this.increment,
-                            decrementSelector: this.decrement,
-                            resetSelector: this.reset
+                        this.on(document, 'increment-count', this.increment)
+                        this.on(document,'decrement-count', this.decrement)
+                        this.on(document,'reset-count', this.reset)
+                        this.on(document,'input-count', function(e, data) {
+                            this.input(e, data)
                         })
-                        this.on('#input', 'blur', {
-                            inputSelector: this.setCount
-                        })
-                        this.on('update-count', this.updateCount)
                     })
                 }
 
-                flight.component(count).attachTo('body')
+                flight.component(count).attachTo('#count')
+
+                 function increment() {
+
+                    this.clicked = function() {
+                        this.trigger('increment-count')
+                    }
+
+
+                    this.after('initialize', function() {
+                        this.on('click', this.clicked)
+                    })
+                }
+
+                flight.component(increment).attachTo('#increment')
+
+                 function decrement() {
+
+                    this.clicked = function() {
+                        this.trigger('decrement-count')
+                    }
+
+
+                    this.after('initialize', function() {
+                        this.on('click', this.clicked)
+                    })
+                }
+
+                flight.component(decrement).attachTo('#decrement')
+
+                 function reset() {
+
+                    this.clicked = function() {
+                        this.trigger('reset-count')
+                    }
+
+
+                    this.after('initialize', function() {
+                        this.on('click', this.clicked)
+                    })
+                }
+
+                flight.component(reset).attachTo('#reset')
+
+                 function input() {
+
+                    this.input = function(e) {
+                        this.trigger('input-count', {initialCount: e.target.value})
+                        this.$node.val("")
+                    }
+
+
+                    this.after('initialize', function() {
+                        this.on('blur', this.input)
+                    })
+                }
+
+                flight.component(input).attachTo('#input')
+
             }
 
         })
